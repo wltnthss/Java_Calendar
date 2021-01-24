@@ -1,10 +1,32 @@
 package sub1.calendar;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+
 public class Calendar {
 		
 	private static final int[] MAX_DAYS = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 	private static final int[] LEAP_MAX_DAYS = { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
+	
+	private HashMap <Date, String> planMap;
+	
+	public Calendar() {
+		planMap = new HashMap<Date, String>();
+	}
+		
+	public void registerPlan(String strDate, String plan) throws ParseException {
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+		planMap.put(date, plan);
+	}
+	
+	public String searchPlan(String strDate) throws ParseException {
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+		String plan = planMap.get(date);
+		return plan;
+	}
+	
 	public boolean isLeapYear(int year) {
 		if(year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
 			return true;
@@ -17,7 +39,7 @@ public class Calendar {
 	public int getMaxDaysOfMonth(int year, int month) {
 		if(isLeapYear(year)) {
 			return LEAP_MAX_DAYS[month];
-		} else {
+		} else { 
 			return MAX_DAYS[month];
 		}
 	}	
@@ -57,7 +79,7 @@ public class Calendar {
 
 	private int getWeekday(int year, int month, int day) {
 		int syear = 1970;
-		final int STANKDARD_WEEKDAY = 3;	//1970/Jan/1st = Thursday
+		final int STANKDARD_WEEKDAY = 4;	//1970/Jan/1st = Thursday
 		
 		int count = 0;
 		
@@ -71,7 +93,7 @@ public class Calendar {
 			count += delta;
 		}
 		
-		count += day;
+		count += day - 1;
 		
 		int week = (count + STANKDARD_WEEKDAY) % 7;
 		return week;
